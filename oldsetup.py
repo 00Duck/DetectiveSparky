@@ -1,3 +1,4 @@
+#NOT CURRENTLY IN USE. Kept as an artifact for reference if needed.
 from setuptools import setup, find_packages
 
 setup(

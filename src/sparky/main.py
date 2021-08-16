@@ -7,7 +7,7 @@ CONTEXT_SETTINGS = dict(help_option_names=["-h", "--help"])
     context_settings=CONTEXT_SETTINGS,
 )
 def cli() -> None:
-    from cmd_funcs.profile import startup_profile
+    from .cmd_funcs.profile import startup_profile
     startup_profile()
 
 @cli.command("version", help="Shows the current version.")
@@ -27,27 +27,27 @@ def profile_cmd() -> None:
 
 @profile_cmd.command("new", help="Adds a new profile to your list of available selections. When adding a profile, please make sure that the associated account contains credentials with admin access so that script/html/xml fields can be searched against.")
 def profile_add():
-    from cmd_funcs.profile import new_profile
+    from .cmd_funcs.profile import new_profile
     new_profile();
 
 @profile_cmd.command("list", help="Displays a list of existing profiles that have been added to sparky.")
 def profile_list():
-    from cmd_funcs.profile import list_profiles
+    from .cmd_funcs.profile import list_profiles
     list_profiles()
 
 @profile_cmd.command("delete", help="Removes an existing profile.")
 def profile_del():
-    from cmd_funcs.profile import delete_profile
+    from .cmd_funcs.profile import delete_profile
     delete_profile()
 
 @profile_cmd.command("select", help="Selects the primary profile to be used for all future queries.")
 def profile_select():
-    from cmd_funcs.profile import select_profile
+    from .cmd_funcs.profile import select_profile
     select_profile()
 
 @profile_cmd.command("edit", help="Edits an existing profile.")
 def profile_edit():
-    from cmd_funcs.profile import edit_profile
+    from .cmd_funcs.profile import edit_profile
     edit_profile()
 
 ### QUERY COMMANDS
@@ -70,7 +70,7 @@ def query_cmd() -> None:
     required=False,
 )
 def query_script(filename: str):
-    from cmd_funcs.query import run_query
+    from .cmd_funcs.query import run_query
     run_query("script", filename)
 
 @query_cmd.command("html", help="Queries against HTML fields using the selected profile.")
@@ -87,7 +87,7 @@ def query_script(filename: str):
     required=False,
 )
 def query_html(filename: str):
-    from cmd_funcs.query import run_query
+    from .cmd_funcs.query import run_query
     run_query("html", filename)
 
 @query_cmd.command("xml", help="Queries against XML fields using the selected profile.")
@@ -104,12 +104,12 @@ def query_html(filename: str):
     required=False,
 )
 def query_xml(filename: str):
-    from cmd_funcs.query import run_query
+    from .cmd_funcs.query import run_query
     run_query("xml", filename)
     
 @query_cmd.command("workflow", help="Performs queries against scripts in workflows.")
 def query_wf():
-    from cmd_funcs.query import query_workflow
+    from .cmd_funcs.query import query_workflow
     query_workflow()
 
 cli.add_command(version_cmd)

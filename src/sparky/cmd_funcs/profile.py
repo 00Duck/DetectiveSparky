@@ -17,7 +17,7 @@ def startup_profile():
             os.system("sqlite3 " + os.path.join(wd, 'sparky.db'))
             conn = sqlite3.connect(os.path.join(wd, 'sparky.db'))
         except:
-            click.echo("Failed to load sparky database.")
+            click.secho("Failed to load sparky database.", fg="red")
             sys.exit(os.EX_DATAERR)
     try:
         cur = conn.cursor()
@@ -29,7 +29,8 @@ def startup_profile():
         );''')
         conn.commit()
     except:
-        click.echo("Error connecting to profile. Please check the sparky database or recreate if you are having issues.")
+        click.secho("Error connecting to profile. Please check the sparky database or recreate if you are having issues.", fg="red")
+        sys.exit(os.EX_DATAERR)
     finally:
         conn.close()
 
@@ -56,7 +57,7 @@ def new_profile():
             keyring.set_password("sparky - " + str(cur.lastrowid) + " - " + pn, user, pw)
             
     except Exception as e:
-        click.echo("Error creating profile " + pn + ": " + str(e))
+        click.secho("Error creating profile " + pn + ": " + str(e), fg="red")
     finally:
         conn.close()
 
@@ -74,7 +75,7 @@ def list_profiles():
         for i in profs:
             click.echo("{:<15} {:<20} {:<30} {:<10} {:<30}".format(i[0], i[1], i[2], '' if i[3] == 0 else 'True', i[4]))
     except Exception as e:
-        click.echo("Error listing profiles: %s", e)
+        click.secho("Error listing profiles: " + str(e), fg="red")
     finally:
         conn.close()
     return profs
@@ -90,7 +91,7 @@ def delete_profile():
     try:
         int(rowid) # throw ValueError if we didn't get an integer
     except ValueError:
-        click.echo("Invalid input.")
+        click.secho("Invalid input.", fg="red")
         return
 
     try:
@@ -102,7 +103,7 @@ def delete_profile():
             try:
                 keyring.delete_password("sparky - " + rowid + " - " + sel_resp[0], sel_resp[1])
             except Exception as e:
-                click.echo("Could not delete password in keychain: " + str(e))
+                click.secho("Could not delete password in keychain: " + str(e), fg="red")
         del_resp = cur.execute("""DELETE FROM profile WHERE rowid = ?;""", (rowid,))
         conn.commit()
         if del_resp.rowcount == 0:
@@ -110,7 +111,7 @@ def delete_profile():
         else:
             click.echo("Profile deleted.")
     except Exception as e:
-        click.echo("Error deleting profile with rowid " + rowid + ": " + str(e))
+        click.secho("Error deleting profile with rowid " + rowid + ": " + str(e), fg="red")
     finally:
         conn.close()
 
@@ -125,7 +126,7 @@ def edit_profile():
     try:
         int(rowid) # throw ValueError if we didn't get an integer
     except ValueError:
-        click.echo("Invalid input.")
+        click.secho("Invalid input.", fg="red")
         return
 
     try:
@@ -168,7 +169,7 @@ def edit_profile():
         conn.commit()
 
     except Exception as e:
-        click.echo("Error editing profile with rowid " + rowid + ": " + str(e))
+        click.secho("Error editing profile with rowid " + rowid + ": " + str(e), fg="red")
     finally:
         conn.close()
 
@@ -183,7 +184,7 @@ def select_profile():
     try:
         int(rowid) # throw ValueError if we didn't get an integer
     except ValueError:
-        click.echo("Invalid input.")
+        click.secho("Invalid input.", fg="red")
         return
 
     try:
@@ -198,6 +199,6 @@ def select_profile():
             conn.commit()
             click.echo("Profile selected.")
     except Exception as e:
-        click.echo("Error selecting profile with rowid %s: %s", rowid, e)
+        click.secho("Error selecting profile with rowid " + str(rowid) + ": " + str(e), fg="red")
     finally:
         conn.close()

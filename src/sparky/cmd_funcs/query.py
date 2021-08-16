@@ -16,8 +16,8 @@ def setup_connection() -> Tuple[requests.Session, str]:
         # Make sure we have a profile
         sel_resp = cur.execute("""SELECT rowid, profile_name, user, url FROM profile WHERE selected = 1;""").fetchone()
         if sel_resp == None:
-            click.echo("No profile currently selected. Please use 'sparky profile select' to select a profile before querying.")
-            return
+            click.secho("No profile currently selected. Please use 'sparky profile select' to select a profile before querying.", fg="red")
+            sys.exit(os.EX_DATAERR)
     except Exception as e:
         click.secho("Error selecting profile during connection setup. Aborting with error: " + str(e), fg="red")
         sys.exit(os.EX_DATAERR)
@@ -26,8 +26,8 @@ def setup_connection() -> Tuple[requests.Session, str]:
     # Make sure we can get the password
     pw = keyring.get_password("sparky - " + str(sel_resp[0]) + " - " + sel_resp[1], sel_resp[2])
     if pw == None:
-        click.echo("Could not find a password for the selected profile. Please try removing and adding the selected profile again.")
-        return
+        click.secho("Could not find a password for the selected profile. Please try removing and adding the selected profile again.", fg="red")
+        sys.exit(os.EX_DATAERR)
     
     # clean up URL
     url = str(sel_resp[3]).strip().replace("http://", "https://")
