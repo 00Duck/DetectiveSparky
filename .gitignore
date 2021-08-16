@@ -1,3 +1,10 @@
+# Database files
+*.db
+
+# VSCode
+.vscode/
+.vscode/settings.json
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
@@ -112,3 +119,6 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+#MacOS
+.DS_Store
