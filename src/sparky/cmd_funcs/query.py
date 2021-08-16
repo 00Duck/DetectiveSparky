@@ -1,3 +1,4 @@
+import json
 from typing import List, Tuple
 import keyring
 import sqlite3
@@ -108,13 +109,15 @@ def generic_lookup(s: requests.Session, url: str, query_list: List[Tuple[str, st
             continue
         try:
             resp_json = resp.json()
-            if resp_json['result'] != None:
+            if resp_json.get('result') != None:
                 for i in resp_json['result']:
-                    click.echo("{:<35} {:<25} {:<25} {:<50}".format(i['sys_id'], table, field, str(i['name'] or i['sys_name'] or i['u_name']).strip() ))
-        except: # This could hit if the user fat-fingered a custom query list.
-            if resp_json['error'] != None:
+                    click.echo("{:<35} {:<25} {:<25} {:<50}".format(i.get('sys_id'), table, field, str(i.get('name') or i.get('sys_name') or i.get('u_name')).strip() ))
+            elif resp.json.get('error') != None:
                 click.secho("Error while querying: " + str(resp_json['error']), fg="yellow")
-    click.secho("Finished", fg="bright_white", bold=True)
+        except: # This could hit if the user fat-fingered a custom query list.
+            if resp_json.get('error') != None:
+                click.secho("Error while querying: " + str(resp_json['error']), fg="yellow")
+    click.secho("Finished.", fg="bright_white", bold=True)
 
 def run_query(query_type: str, filename: str):
     click.echo("Input query string for lookup")
@@ -146,13 +149,15 @@ def wf_script_lookup(s: requests.Session, url: str, query_list: List[Tuple[str, 
             continue
         try:
             resp_json = resp.json()
-            if resp_json['result'] != None:
+            if resp_json.get('result') != None:
                 for i in resp_json['result']:
-                    click.echo("{:<35} {:<35} {:<35} {:<50}".format( wf_act_sys_id, wf_version_sys_id, i['sys_id'], wf_activity_name ))
-        except: # This should also never happen, but just in case!
-            if resp_json['error'] != None:
+                    click.echo("{:<35} {:<35} {:<35} {:<50}".format( wf_act_sys_id, wf_version_sys_id, i.get('sys_id'), wf_activity_name ))
+            elif resp.json.get('error') != None:
                 click.secho("Error while querying: " + str(resp_json['error']), fg="yellow")
-    click.secho("Finished", fg="bright_white", bold=True)
+        except: # This should also never happen, but just in case!
+            if resp_json.get('error') != None:
+                click.secho("Error while querying: " + str(resp_json['error']), fg="yellow")
+    click.secho("Finished.", fg="bright_white", bold=True)
 
 def wf_activity_lookup(s: requests.Session, url: str, wf_name: str) -> List[Tuple[str, str, str]]:
     """Grabs a list of all published wf_activity records that match the given workflow. This will build our initial list of activities to
@@ -165,9 +170,11 @@ def wf_activity_lookup(s: requests.Session, url: str, wf_name: str) -> List[Tupl
         sys.exit(os.EX_DATAERR)
     resp_json = resp.json()
     ret = []
-    if resp_json['result'] != None:
+    if resp_json.get('result') != None:
         for i in resp_json['result']:
-            ret.append( (i['sys_id'], i['name'], i['workflow_version']['value']) )
+            ret.append( (i.get('sys_id'), i.get('name'), i.get('workflow_version').get('value')) )
+    elif resp.json.get('error') != None:
+            click.secho("Error while querying: " + str(resp_json['error']), fg="yellow")
     return ret
 
 def query_workflow():

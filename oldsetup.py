@@ -1,4 +1,4 @@
-#NOT CURRENTLY IN USE. Kept as an artifact for reference if needed.
+#NOT CURRENTLY IN USE. Kept as an artifact for reference if needed. Also can be renamed to run pip install --editable .
 from setuptools import setup, find_packages
 
 setup(
@@ -13,6 +13,6 @@ setup(
     ],
     entry_points='''
         [console_scripts]
-        sparky=main:cli
+        sparky=src.sparky.main:cli
     ''',
 )

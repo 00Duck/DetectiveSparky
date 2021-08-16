@@ -5,6 +5,9 @@
 .vscode/
 .vscode/settings.json
 
+#setuptools wheel metadata stuff
+pip-wheel-metadata*
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
