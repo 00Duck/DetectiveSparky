@@ -17,7 +17,7 @@ def get_full_query_list(s: requests.Session, url: str, query_type: str) -> List[
     resp = s.get(url + "/api/now/table/sys_dictionary", params={"sysparm_fields": "name,element", "sysparm_query": sd_query})
     if resp.status_code != 200:
         click.secho("Received status code " + str(resp.status_code) + " while retrieving list of " + query_type + " tables to query. Aborting.", fg="red")
-        sys.exit(os.EX_DATAERR)
+        sys.exit()
     resp_json = resp.json()
     ret = []
     if resp_json['result'] != None:
@@ -33,16 +33,16 @@ def get_list_from_file(filename: str) -> List[Tuple[str, str]]:
                 line_arr = line.split(',')
                 if len(line_arr) != 2:
                     click.secho("File " + filename + " is not formatted correctly. Aborting query.", fg="red")
-                    sys.exit(os.EX_DATAERR)
+                    sys.exit()
                 table = str(line_arr[0]).strip()
                 field = str(line_arr[1]).strip()
                 if table == "" or field == "":
                     click.secho("File " + filename + " is not formatted correctly. Aborting query.", fg="red")
-                    sys.exit(os.EX_DATAERR)
+                    sys.exit()
                 ret.append( (str(line_arr[0]), str(line_arr[1])) )
     except Exception as e:
         click.secho("Could not open " + filename + ": " + str(e), fg="red")
-        sys.exit(os.EX_DATAERR)
+        sys.exit()
     return ret
 
 def generic_lookup(s: requests.Session, url: str, query_list: List[Tuple[str, str]], query_string: str):
@@ -54,7 +54,7 @@ def generic_lookup(s: requests.Session, url: str, query_list: List[Tuple[str, st
         resp = s.get(url + "/api/now/table/" + table, params={"sysparm_fields":"sys_id,name,u_name,sys_name", "sysparm_query": field + "LIKE" + quote(query_string)})
         if resp.status_code == 401 or resp.status_code == 500 or resp.status_code == 429:
             click.secho("Received status code " + str(resp.status_code) + " while retrieving data for table: " + table + ", field: " + field + ". Aborting.", fg="red")
-            sys.exit(os.EX_DATAERR)
+            sys.exit()
         elif resp.status_code == 403: # sometimes we don't have access to query a table. Let's just skip these.
             continue
         try:
@@ -93,7 +93,7 @@ def wf_script_lookup(s: requests.Session, url: str, query_list: List[Tuple[str, 
         resp = s.get(url + "/api/now/table/sys_variable_value", params={"sysparm_fields":"sys_id", "sysparm_query": query})
         if resp.status_code == 401 or resp.status_code == 500 or resp.status_code == 429:
             click.secho("Received status code " + str(resp.status_code) + " while retrieving data for wf_activity: " + wf_act_sys_id + ", name: " + wf_activity_name + ". Aborting.", fg="red")
-            sys.exit(os.EX_DATAERR)
+            sys.exit()
         elif resp.status_code == 403: # This should never happen...
             click.secho("403 while querying sys_variable_value", fg="yellow")
             continue
@@ -117,7 +117,7 @@ def wf_activity_lookup(s: requests.Session, url: str, wf_name: str) -> List[Tupl
     resp = s.get(url + "/api/now/table/wf_activity", params={"sysparm_fields": "sys_id,name,workflow_version", "sysparm_query": query})
     if resp.status_code != 200:
         click.secho("Received status code " + str(resp.status_code) + " while retrieving list of wf_activity records to query. Aborting.", fg="red")
-        sys.exit(os.EX_DATAERR)
+        sys.exit()
     resp_json = resp.json()
     ret = []
     if resp_json.get('result') != None:

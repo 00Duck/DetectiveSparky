@@ -18,7 +18,7 @@ def startup_profile():
             conn = sqlite3.connect(os.path.join(wd, 'sparky.db'))
         except:
             click.secho("Failed to load sparky database.", fg="red")
-            sys.exit(os.EX_DATAERR)
+            sys.exit()
     try:
         cur = conn.cursor()
         cur.execute('''CREATE TABLE IF NOT EXISTS profile (
@@ -30,7 +30,7 @@ def startup_profile():
         conn.commit()
     except:
         click.secho("Error connecting to profile. Please check the sparky database or recreate if you are having issues.", fg="red")
-        sys.exit(os.EX_DATAERR)
+        sys.exit()
     finally:
         conn.close()
 

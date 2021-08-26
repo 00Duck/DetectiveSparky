@@ -1,6 +1,6 @@
 import click
 from ..connection import conn
-import os, sys
+import sys
 import re
 
 def text_search():
@@ -11,11 +11,11 @@ def text_search():
 
     if table_name == "" or sys_id == "":
         click.secho("You must enter both a sys_id and table name to search", fg="red")
-        sys.exit(os.EX_DATAERR)
+        sys.exit()
 
     if len(sys_id) != 32:
         click.secho("Invalid sys_id", fg="red")
-        sys.exit(os.EX_DATAERR)
+        sys.exit()
     
     s, url = conn.setup_connection()
     resp = s.get(url + "/api/now/table/" + table_name, params={"sysparm_query": "sys_id=" + sys_id})
@@ -28,12 +28,12 @@ def text_search():
         except:
             click.secho("Search failed with status " + str(resp.status_code), fg="red")
         finally:
-            sys.exit(os.EX_DATAERR)
+            sys.exit()
     
     res = body.get('result')
     if len(res) == 0:
         click.secho("No results found.", fg="bright_white", bold=True)
-        sys.exit(os.EX_DATAERR)
+        sys.exit()
 
     obj = res[0] # at this point, we have a full record in the form of a dict
     found_results = False
