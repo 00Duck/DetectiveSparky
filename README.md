@@ -1,7 +1,11 @@
 # DetectiveSparky
 A command line tool to assist ServiceNow developers with finding code in one or more ServiceNow instances.
 
-Sparky is able to query every table that contains a script, HTML, or XML field. In additional, workflows can be queried by name and will return any published activities whose associated script fields contain the value queried.
+Run a string search against every table that contains a script, HTML, or XML field.
+
+Search against a workflow to return any published activities whose associated script fields contain the value queried.
+
+Need to find a specific pattern or string in a single record? Use text searching to find each instance of an occurrence in a single record. Useful for larger script includes, knowledge articles, portal widgets, or any other kind of record.
 
 Custom files can also be used (see Querying below) to narrow down the selection of table/fields to query for each type.
 
