@@ -71,3 +71,26 @@ Save the file (if you are using nano, Ctrl + O, Enter, Ctrl + X) and then run th
 sparky query script -f mycustomquery
 ```
 (Enter string to search)
+
+## Upgrading
+Simply download the latest wheel and run `pip install DetectiveSparky-<version>-py3-none-any.whl`  
+
+## Building from source/contributing
+You have the option to manually download and build this project. To do so, first `git clone` this repository to your computer.
+
+Navigate to the cloned location and type the following to start the virtual environment:
+```
+source bin/activate
+```
+
+Install sparky in the virtual environment in editable mode
+```
+pip install --editable .
+```
+
+Note that the sparky installed in the virtual environment is different (and uses a different database) than the sparky installed directly in python. However, keychains will be shared between sparky versions.
+
+When you are ready to build the project, create a wheel and tar by running the following:
+```
+python -m build
+```

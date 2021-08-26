@@ -14,7 +14,7 @@ def cli() -> None:
 def version_cmd() -> None:
     click.echo("{} {}\n\n{}".format(
         click.style("DetectiveSparky", fg="green"),
-        click.style("v1.0.0", fg="bright_white", bold=True),
+        click.style("v1.1.0", fg="bright_white", bold=True),
         click.style("Written by Blake Duckworth", fg="blue", dim=True)
         )
     )
@@ -112,6 +112,14 @@ def query_wf():
     from .cmd_funcs.query import query_workflow
     query_workflow()
 
+
+### TEXT SEARCH
+@cli.command("textsearch", help="Text searches a single record in ServiceNow. Shows all case-sensitive matching instances.")
+def txt_cmd() -> None:
+    from .cmd_funcs.single_search import text_search
+    text_search()
+
 cli.add_command(version_cmd)
 cli.add_command(profile_cmd)
 cli.add_command(query_cmd)
+cli.add_command(txt_cmd)
