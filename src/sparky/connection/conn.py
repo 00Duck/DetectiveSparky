@@ -32,6 +32,9 @@ def setup_connection() -> Tuple[requests.Session, str]:
     url = str(sel_resp[3]).strip().replace("http://", "https://")
     if url.find("https://") == -1:
         url = "https://" + url
+    # Remove trailing slashes before appending the rest of the URL (common if copied from a browser)
+    if url[-1] == '/':
+        url = url[:-1]
     if not url.endswith("service-now.com"):
         url += ".service-now.com"
 
@@ -52,3 +55,5 @@ def setup_connection() -> Tuple[requests.Session, str]:
     else:
         click.secho("Abnormal status code for instance (" + str(resp.status_code) + "), aborting.", fg="red")
         sys.exit()
+
+
